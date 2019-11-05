@@ -1,4 +1,4 @@
-package com.yk1028.aop.logging.config;
+package com.yk1028.aop.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
