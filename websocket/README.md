@@ -8,6 +8,7 @@
 3. 서버측에서 연결시 사용한 destination(ex. "/topic/hello")를 이용해 클라이언트에게 메세지를 보낼 수 있다.
     - NotificationService.class
     
+
 4. 데이터는 Json형식으로 주고 받는다.
 
 # Polling
