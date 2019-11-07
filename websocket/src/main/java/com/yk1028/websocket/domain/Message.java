@@ -18,4 +18,11 @@ public class Message {
     public void setContents(String contents) {
         this.contents = contents;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "contents='" + contents + '\'' +
+                '}';
+    }
 }

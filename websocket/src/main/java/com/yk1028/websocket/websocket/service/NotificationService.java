@@ -1,4 +1,4 @@
-package com.yk1028.websocket.service;
+package com.yk1028.websocket.websocket.service;
 
 import com.yk1028.websocket.domain.Message;
 import org.springframework.beans.factory.annotation.Autowired;

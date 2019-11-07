@@ -9,3 +9,9 @@
     - NotificationService.class
     
 4. 데이터는 Json형식으로 주고 받는다.
+
+# Polling
+
+1. BlockingQueue를 활용하여 쉽게 구현가능
+
+2. 즉각적인 응답이 필요하지 않을 때 polling을 고려해보면 좋을 것 같다. 
