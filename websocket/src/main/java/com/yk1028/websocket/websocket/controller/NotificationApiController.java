@@ -16,6 +16,11 @@ public class NotificationApiController {
 
     @GetMapping("/noti/{message}")
     public void sendNotification(@PathVariable String message) {
-        notificationService.send(message);
+        notificationService.sendToHello(message);
+    }
+
+    @GetMapping("/noti/{roomId}/{message}")
+    public void sendNotification(@PathVariable Long roomId, @PathVariable String message) {
+        notificationService.send(roomId, message);
     }
 }

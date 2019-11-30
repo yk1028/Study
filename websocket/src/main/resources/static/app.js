@@ -16,9 +16,10 @@ function connect() {
     var socket = new SockJS('/websockethandler');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
+        const roomTopic = '/topic/' + $("#room-id").val();
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/hello', function (message) {
+        stompClient.subscribe(roomTopic, function (message) {
             showGreeting(JSON.parse(message.body).contents);
         });
     });

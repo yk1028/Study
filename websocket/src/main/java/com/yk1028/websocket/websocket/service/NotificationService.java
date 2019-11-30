@@ -11,7 +11,11 @@ public class NotificationService {
     @Autowired
     private SimpMessagingTemplate template;
 
-    public void send(String notification) {
+    public void sendToHello(String notification) {
         this.template.convertAndSend("/topic/hello", new Message(notification));
+    }
+
+    public void send(Long roomId, String notification) {
+        this.template.convertAndSend("/topic/" + roomId, new Message(notification));
     }
 }
