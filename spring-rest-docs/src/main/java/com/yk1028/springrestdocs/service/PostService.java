@@ -20,4 +20,10 @@ public class PostService {
     public List<Post> findAll() {
         return postRepository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public Post findById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+    }
 }
