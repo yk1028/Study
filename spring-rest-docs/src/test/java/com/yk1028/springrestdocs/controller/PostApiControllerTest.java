@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PostApiController.class)
-@AutoConfigureRestDocs(uriScheme = "https", uriHost = "docs.api.com")
+@AutoConfigureRestDocs
 public class PostApiControllerTest {
 
     @Autowired
@@ -45,14 +44,9 @@ public class PostApiControllerTest {
 
         given(postService.findById(1L)).willReturn(post);
 
-        ResultActions result = mockMvc.perform(
-                get("/api/posts/1")
-        );
-
-        result.andExpect(status().isOk())
+        mockMvc.perform(get("/api/posts/1"))
+                .andExpect(status().isOk())
                 .andDo(document("post",
-                        getDocumentRequest(),
-                        getDocumentResponse(),
                         responseFields(
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
                                 fieldWithPath("content").type(JsonFieldType.STRING).description("내용")
@@ -61,24 +55,23 @@ public class PostApiControllerTest {
                 .andExpect(jsonPath("$.content", is("content")));
     }
 
-//    @Test
-//    void list() throws Exception {
-//        List<Post> posts = new ArrayList<>();
-//        posts.add(new Post("title", "content"));
-//
-//        given(postService.findAll()).willReturn(posts);
-//
-//        ResultActions result = mockMvc.perform(
-//                get("/api/posts")
-//        );
-//
-//        result.andExpect(status().isOk())
-//                .andDo(document("post-list",
-//                        getDocumentRequest(),
-//                        getDocumentResponse(),
-//                        responseFields(
-//                                fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
-//                                fieldWithPath("content").type(JsonFieldType.STRING).description("내용")
-//                        )));
-//    }
+    @Test
+    void list() throws Exception {
+        List<Post> posts = new ArrayList<>();
+        posts.add(new Post("title1", "content1"));
+        posts.add(new Post("title2", "content2"));
+        posts.add(new Post("title3", "content3"));
+
+        given(postService.findAll()).willReturn(posts);
+
+        mockMvc.perform(get("/api/posts"))
+                .andExpect(status().isOk())
+                .andDo(document("post-list",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        responseFields(
+                                fieldWithPath("[].title").type(JsonFieldType.STRING).description("제목"),
+                                fieldWithPath("[].content").type(JsonFieldType.STRING).description("내용")
+                        )));
+    }
 }
