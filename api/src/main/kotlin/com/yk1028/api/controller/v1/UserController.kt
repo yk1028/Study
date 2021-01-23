@@ -1,5 +1,6 @@
 package com.yk1028.api.controller.v1
 
+import com.yk1028.api.advice.exception.CUserNotFoundException
 import com.yk1028.api.entity.User
 import com.yk1028.api.model.reponse.CommonResult
 import com.yk1028.api.model.reponse.ListResult
@@ -9,6 +10,7 @@ import com.yk1028.api.service.ResponseService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.web.bind.annotation.*
 
 
@@ -28,7 +30,7 @@ class UserController(private val userJpaRepo: UserJpaRepository, private val res
     @GetMapping(value = ["/user/{msrl}"])
     fun findUserById(@ApiParam(value = "회원ID", required = true) @PathVariable msrl: Long): SingleResult<User> {
         // 결과데이터가 단일건인경우 getBasicResult를 이용해서 결과를 출력한다.
-        return responseService.getSingleResult(userJpaRepo.findById(msrl).orElse(null))
+        return responseService.getSingleResult(userJpaRepo.findByIdOrNull(msrl) ?: throw CUserNotFoundException())
     }
 
     @ApiOperation(value = "회원 입력", notes = "회원을 입력한다")
