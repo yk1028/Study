@@ -25,7 +25,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-	
+
+	implementation("io.springfox:springfox-swagger2:2.6.1")
+	implementation("io.springfox:springfox-swagger-ui:2.6.1")
+
 	implementation("com.h2database:h2")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
