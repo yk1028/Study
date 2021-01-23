@@ -5,6 +5,11 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	kotlin("jvm") version "1.4.21"
 	kotlin("plugin.spring") version "1.4.21"
+	kotlin("plugin.noarg") version "1.3.71"
+}
+
+noArg {
+	annotation("javax.persistence.Entity")
 }
 
 group = "com.yk1028"
