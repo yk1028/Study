@@ -31,10 +31,13 @@ dependencies {
 
 	implementation("com.h2database:h2")
 
+	implementation("net.rakugakibox.util:yaml-resource-bundle:1.1")
+
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
+
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions {

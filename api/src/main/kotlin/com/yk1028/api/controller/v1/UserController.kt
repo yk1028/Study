@@ -28,7 +28,8 @@ class UserController(private val userJpaRepo: UserJpaRepository, private val res
 
     @ApiOperation(value = "회원 단건 조회", notes = "userId로 회원을 조회한다")
     @GetMapping(value = ["/user/{msrl}"])
-    fun findUserById(@ApiParam(value = "회원ID", required = true) @PathVariable msrl: Long): SingleResult<User> {
+    fun findUserById(@ApiParam(value = "회원ID", required = true) @PathVariable msrl: Long,
+                     @ApiParam(value = "언어", defaultValue = "ko") @RequestParam lang: String): SingleResult<User> {
         // 결과데이터가 단일건인경우 getBasicResult를 이용해서 결과를 출력한다.
         return responseService.getSingleResult(userJpaRepo.findByIdOrNull(msrl) ?: throw CUserNotFoundException())
     }
@@ -56,6 +57,6 @@ class UserController(private val userJpaRepo: UserJpaRepository, private val res
             @ApiParam(value = "회원번호", required = true) @PathVariable msrl: Long): CommonResult {
         userJpaRepo.deleteById(msrl)
         // 성공 결과 정보만 필요한경우 getSuccessResult()를 이용하여 결과를 출력한다.
-        return responseService.successResult
+        return responseService.successResult()
     }
 }
