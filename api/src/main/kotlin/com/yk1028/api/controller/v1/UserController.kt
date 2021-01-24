@@ -7,9 +7,7 @@ import com.yk1028.api.model.reponse.ListResult
 import com.yk1028.api.model.reponse.SingleResult
 import com.yk1028.api.repo.UserJpaRepository
 import com.yk1028.api.service.ResponseService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiParam
+import io.swagger.annotations.*
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.web.bind.annotation.*
 
@@ -19,6 +17,12 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping(value = ["/v1"])
 class UserController(private val userJpaRepo: UserJpaRepository, private val responseService: ResponseService) {
 
+    @ApiImplicitParams(ApiImplicitParam(
+            name = "X-AUTH-TOKEN",
+            value = "로그인 성공 후 access_token",
+            required = true,
+            dataType = "String",
+            paramType = "header"))
     @ApiOperation(value = "회원 리스트 조회", notes = "모든 회원을 조회한다")
     @GetMapping(value = ["/users"])
     fun findAllUser(): ListResult<User> {
@@ -26,6 +30,12 @@ class UserController(private val userJpaRepo: UserJpaRepository, private val res
         return responseService.getListResult(userJpaRepo.findAll())
     }
 
+    @ApiImplicitParams(ApiImplicitParam(
+            name = "X-AUTH-TOKEN",
+            value = "로그인 성공 후 access_token",
+            required = false,
+            dataType = "String",
+            paramType = "header"))
     @ApiOperation(value = "회원 단건 조회", notes = "userId로 회원을 조회한다")
     @GetMapping(value = ["/user/{msrl}"])
     fun findUserById(@ApiParam(value = "회원ID", required = true) @PathVariable msrl: Long,
@@ -34,23 +44,30 @@ class UserController(private val userJpaRepo: UserJpaRepository, private val res
         return responseService.getSingleResult(userJpaRepo.findByIdOrNull(msrl) ?: throw CUserNotFoundException())
     }
 
-    @ApiOperation(value = "회원 입력", notes = "회원을 입력한다")
-    @PostMapping(value = ["/user"])
-    fun save(@ApiParam(value = "회원아이디", required = true) @RequestParam uid: String,
-             @ApiParam(value = "회원이름", required = true) @RequestParam name: String): SingleResult<User> {
-        return responseService.getSingleResult(userJpaRepo.save(User(uid, name)))
-    }
-
+    @ApiImplicitParams(ApiImplicitParam(
+            name = "X-AUTH-TOKEN",
+            value = "로그인 성공 후 access_token",
+            required = true,
+            dataType = "String",
+            paramType = "header"))
     @ApiOperation(value = "회원 수정", notes = "회원정보를 수정한다")
     @PutMapping(value = ["/user"])
     fun modify(
             @ApiParam(value = "회원번호", required = true) @RequestParam msrl: Long,
             @ApiParam(value = "회원아이디", required = true) @RequestParam uid: String,
             @ApiParam(value = "회원이름", required = true) @RequestParam name: String): SingleResult<User> {
+        val user = userJpaRepo.findByIdOrNull(msrl) ?: throw CUserNotFoundException()
+        user.updateUser(uid, name)
 
-        return responseService.getSingleResult(userJpaRepo.save(User(uid, name, msrl)))
+        return responseService.getSingleResult(userJpaRepo.save(user))
     }
 
+    @ApiImplicitParams(ApiImplicitParam(
+            name = "X-AUTH-TOKEN",
+            value = "로그인 성공 후 access_token",
+            required = true,
+            dataType = "String",
+            paramType = "header"))
     @ApiOperation(value = "회원 삭제", notes = "userId로 회원정보를 삭제한다")
     @DeleteMapping(value = ["/user/{msrl}"])
     fun delete(

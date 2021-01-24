@@ -1,5 +1,6 @@
 package com.yk1028.api.advice
 
+import com.yk1028.api.advice.exception.CEmailSigninFailedException
 import com.yk1028.api.advice.exception.CUserNotFoundException
 import com.yk1028.api.model.reponse.CommonResult
 import com.yk1028.api.service.ResponseService
@@ -39,5 +40,13 @@ class ExceptionAdvice(private val responseService: ResponseService, private val 
     // code정보, 추가 argument로 현재 locale에 맞는 메시지를 조회합니다.
     private fun getMessage(code: String, args: Array<Any>?): String =
             messageSource.getMessage(code, args, LocaleContextHolder.getLocale())
+
+    @ExceptionHandler(CEmailSigninFailedException::class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected fun emailSigninFailed(request: HttpServletRequest, e: CEmailSigninFailedException): CommonResult {
+        return responseService.failResult(
+                Integer.valueOf(getMessage("emailSigninFailed.code")),
+                getMessage("emailSigninFailed.msg"))
+    }
 
 }
