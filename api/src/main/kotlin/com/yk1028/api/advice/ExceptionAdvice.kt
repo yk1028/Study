@@ -1,7 +1,9 @@
 package com.yk1028.api.advice
 
 import com.yk1028.api.advice.exception.CAuthenticationEntryPointException
+import com.yk1028.api.advice.exception.CCommunicationException
 import com.yk1028.api.advice.exception.CEmailSigninFailedException
+import com.yk1028.api.advice.exception.CUserExistException
 import com.yk1028.api.advice.exception.CUserNotFoundException
 import com.yk1028.api.model.reponse.CommonResult
 import com.yk1028.api.service.ResponseService
@@ -17,14 +19,14 @@ import javax.servlet.http.HttpServletRequest
 @RestControllerAdvice
 class ExceptionAdvice(private val responseService: ResponseService, private val messageSource: MessageSource) {
 
-    @ExceptionHandler(Exception::class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected fun defaultException(request: HttpServletRequest?, e: Exception?): CommonResult {
-        // 예외 처리의 메시지를 MessageSource에서 가져오도록 수정
-        return responseService.failResult(
-                Integer.valueOf(getMessage("unKnown.code")),
-                getMessage("unKnown.msg"))
-    }
+//    @ExceptionHandler(Exception::class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    protected fun defaultException(request: HttpServletRequest?, e: Exception?): CommonResult {
+//        // 예외 처리의 메시지를 MessageSource에서 가져오도록 수정
+//        return responseService.failResult(
+//                Integer.valueOf(getMessage("unKnown.code")),
+//                getMessage("unKnown.msg"))
+//    }
 
     @ExceptionHandler(CUserNotFoundException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -58,9 +60,25 @@ class ExceptionAdvice(private val responseService: ResponseService, private val 
     }
 
     @ExceptionHandler(AccessDeniedException::class)
-    fun AccessDeniedException(request: HttpServletRequest?, e: AccessDeniedException?): CommonResult? {
+    fun accessDeniedException(request: HttpServletRequest?, e: AccessDeniedException?): CommonResult? {
         return responseService.failResult(
                 Integer.valueOf(getMessage("accessDenied.code")),
                 getMessage("accessDenied.msg"))
+    }
+
+    @ExceptionHandler(CCommunicationException::class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    fun communicationException(request: HttpServletRequest?, e: CCommunicationException?): CommonResult? {
+        return responseService.failResult(
+                Integer.valueOf(getMessage("communicationError.code")),
+                getMessage("communicationError.msg"))
+    }
+
+    @ExceptionHandler(CUserExistException::class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    fun communicationException(request: HttpServletRequest?, e: CUserExistException?): CommonResult? {
+        return responseService.failResult(
+                Integer.valueOf(getMessage("existingUser.code")),
+                getMessage("existingUser.msg"))
     }
 }

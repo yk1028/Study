@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import java.util.spi.CalendarDataProvider
 import java.util.stream.Collectors
 import javax.persistence.*
 
@@ -12,7 +13,8 @@ import javax.persistence.*
 @Table(name = "user") // 'user' 테이블과 매핑됨을 명시
 class User(uid: String,
            name: String,
-           password: String,
+           password: String? = null,
+           provider: String? = null,
            roles: List<String> = ArrayList(),
            msrl: Long? = null) : UserDetails {
     @Id // pk
@@ -24,12 +26,15 @@ class User(uid: String,
         protected set
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(nullable = false, length = 100)
-    private val password: String = password
+    @Column(length = 100)
+    private val password: String? = password
 
     @Column(nullable = false, length = 100)
     var name: String = name
         protected set
+
+    @Column(length = 100)
+    var provider: String? = provider
 
     @ElementCollection(fetch = FetchType.EAGER)
     val roles: List<String> = roles
@@ -49,7 +54,7 @@ class User(uid: String,
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    override fun getPassword(): String {
+    override fun getPassword(): String? {
         return password
     }
 
@@ -68,58 +73,8 @@ class User(uid: String,
         return true
     }
 
-
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     override fun isEnabled(): Boolean {
         return true
     }
 }
-
-//
-//@Entity
-//class User(uid: String, name: String, password: String, msrl: Long? = null) : UserDetails {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    var msrl: Long? = msrl
-//
-//    @Column(nullable = false, unique = true, length = 30)
-//    var uid: String = uid
-//
-//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//    @Column(nullable = false, length = 100)
-//    private var password: String = password
-//
-//    @Column(nullable = false, length = 100)
-//    var name: String = name
-//
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    var roles: List<String> = ArrayList()
-//
-//    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-//        TODO("Not yet implemented")
-//    }
-//
-//    override fun isEnabled(): Boolean {
-//        TODO("Not yet implemented")
-//    }
-//
-//    override fun getUsername(): String {
-//        TODO("Not yet implemented")
-//    }
-//
-//    override fun getPassword(): String {
-//        TODO("Not yet implemented")
-//    }
-//
-//    override fun isCredentialsNonExpired(): Boolean {
-//        TODO("Not yet implemented")
-//    }
-//
-//    override fun isAccountNonExpired(): Boolean {
-//        TODO("Not yet implemented")
-//    }
-//
-//    override fun isAccountNonLocked(): Boolean {
-//        TODO("Not yet implemented")
-//    }
-//}
