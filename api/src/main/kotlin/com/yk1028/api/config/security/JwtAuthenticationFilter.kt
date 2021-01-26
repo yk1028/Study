@@ -23,5 +23,4 @@ class JwtAuthenticationFilter(private val jwtTokenProvider: JwtTokenProvider) : 
         }
         filterChain.doFilter(request, response)
     }
-
 }

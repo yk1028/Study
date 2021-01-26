@@ -1,5 +1,6 @@
 package com.yk1028.api.advice
 
+import com.yk1028.api.advice.exception.CAuthenticationEntryPointException
 import com.yk1028.api.advice.exception.CEmailSigninFailedException
 import com.yk1028.api.advice.exception.CUserNotFoundException
 import com.yk1028.api.model.reponse.CommonResult
@@ -49,4 +50,17 @@ class ExceptionAdvice(private val responseService: ResponseService, private val 
                 getMessage("emailSigninFailed.msg"))
     }
 
+    @ExceptionHandler(CAuthenticationEntryPointException::class)
+    fun authenticationEntryPointException(request: HttpServletRequest?, e: CAuthenticationEntryPointException?): CommonResult? {
+        return responseService.failResult(
+                Integer.valueOf(getMessage("entryPointException.code")),
+                getMessage("entryPointException.msg"))
+    }
+
+    @ExceptionHandler(AccessDeniedException::class)
+    fun AccessDeniedException(request: HttpServletRequest?, e: AccessDeniedException?): CommonResult? {
+        return responseService.failResult(
+                Integer.valueOf(getMessage("accessDenied.code")),
+                getMessage("accessDenied.msg"))
+    }
 }
